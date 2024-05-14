@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منع تآكل التربة</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eaf4e8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            text-align: right;
+        }
+        header {
+            background: #008000;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #00cc00 3px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        header ul {
+            padding: 0;
+            list-style: none;
+        }
+        header li {
+            display: inline;
+            padding: 0 20px 0 20px;
+        }
+        .main-section {
+            padding: 20px;
+            background: #fff;
+            margin-top: 20px;
+            border-radius: 5px;
+            text-align: justify;
+        }
+        .button {
+            display: inline-block;
+            color: #fff;
+            background: #008000;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background: #00cc00;
+        }
+        footer {
+            background: #008000;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+            border-top: #00cc00 3px solid;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>منع تآكل التربة</h1>
+            <ul>
+                <li><a href="#about">حول</a></li>
+                <li><a href="#report">التقرير</a></li>
+                <li><a href="#project">المشروع</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="container">
+        <section id="about" class="main-section">
+            <h2>حول</h2>
+            <p>مرحبًا بك في مبادرتنا لمنع تآكل التربة. مهمتنا هي رفع الوعي واتخاذ إجراءات ضد تآكل التربة لحماية البيئة والحفاظ على النظم البيئية الصحية.</p>
+        </section>
+
+        <section id="report" class="main-section">
+            <h2>التقرير عن تآكل التربة</h2>
+            <p>إذا لاحظت أي حالات من تآكل التربة، يرجى الإبلاغ عن الموقع باستخدام الزر أدناه. يساعد تقريرك في اتخاذ إجراءات في الوقت المناسب لمنع حدوث مزيد من الأضرار.</p>
+            <button class="button" onclick="takePhoto()">التقرير مع الصورة</button>
+            <html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Camera Capture</title>
+</head>
+<body>
+<button id="switchCameraButton">تغيير الكاميرا</button>
+<button id="captureButton">التقاط صورة</button>
+<video id="cameraFeed" autoplay style="width: 100%; height: auto; display: none;"></video>
+<canvas id="capturedImage" style="display: none;"></canvas>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const switchCameraButton = document.getElementById('switchCameraButton');
+  const captureButton = document.getElementById('captureButton');
+  const cameraFeed = document.getElementById('cameraFeed');
+  const capturedImageCanvas = document.getElementById('capturedImage');
+  let mediaStream = null;
+  let isFrontCamera = true;
+
+  // تحديد الكاميرا عند النقر على زر تغيير الكاميرا
+  switchCameraButton.addEventListener('click', function() {
+    isFrontCamera = !isFrontCamera;
+    startCamera(isFrontCamera);
+  });
+
+  // التقاط الصورة عند النقر على زر التقاط الصورة
+  captureButton.addEventListener('click', function() {
+    const context = capturedImageCanvas.getContext('2d');
+    context.drawImage(cameraFeed, 0, 0, capturedImageCanvas.width, capturedImageCanvas.height);
+    capturedImageCanvas.style.display = 'block'; // إظهار عنصر الكانفاس
+    saveImage();
+  });
+
+  // تشغيل الكاميرا الافتراضية عند تحميل الصفحة
+  startCamera(isFrontCamera);
+
+  // تشغيل الكاميرا (أمامية أو خلفية) وعرضها في الفيديو
+  function startCamera(useFrontCamera) {
+    const facingMode = useFrontCamera ? 'user' : 'environment';
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode } })
+      .then(function(stream) {
+        cameraFeed.srcObject = stream;
+        mediaStream = stream;
+        cameraFeed.style.display = 'block'; // إظهار عنصر الفيديو
+      })
+      .catch(function(error) {
+        console.error('حدث خطأ في الوصول إلى الكاميرا:', error);
+      });
+  }
+
+  // حفظ الصورة في الاستديو الخاص بالجهاز
+  function saveImage() {
+    const dataURL = capturedImageCanvas.toDataURL('image/jpeg'); // تحويل الكانفاس إلى بيانات URL
+    const a = document.createElement('a');
+    a.href = dataURL;
+    a.download = 'captured_image.jpg'; // اسم الملف المحفوظ
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  // توقف تشغيل الكاميرا وإخفاء الفيديو والصورة عند إغلاق الصفحة
+  window.addEventListener('beforeunload', function() {
+    if (mediaStream) {
+      mediaStream.getTracks().forEach(function(track) {
+        track.stop();
+      });
+    }
+  });
+});
+</script>
+</body>
+</html>
+            
+        </section>
+
+        <section id="project" class="main-section">
+            <h2>المشروع المرتبط</h2>
+            <p>تحقق من المشروع المرتبط لمزيد من المعلومات والموارد الإضافية.</p>
+            <a href="https://example.com/related-project" class="button">عرض المشروع</a>
+        </section>
+    </div>
+
+    <footer>
+        <p>الثانوية الثالثة والعشرون</p>
+        <p>منع تآكل التربة &copy; 2024-1445</p>
+        
+    </footer>
+
+    <script>
+        function takePhoto() {
+            alert('هذه الميزة تتطلب الوصول إلى الكاميرا الخلفية. قم بتنفيذ وظيفة الوصول إلى الكاميرا هنا.');
+        }
+    </script>
+</body>
+</html>
